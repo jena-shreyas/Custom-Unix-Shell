@@ -101,10 +101,10 @@ Trojan processes frequently spawn bursts of CPU-intensive child/grandchild proce
 - **Heuristic Formula ([`assgn2.squashbug.heuristic.txt`](./assgn2.squashbug.heuristic.txt)):**
   For each candidate process $P$ along the ancestor chain (parsed from `/proc/<pid>/stat` and `/proc/uptime`), the shell computes:
 
-  $$H(P) = \frac{\text{children}(P)}{\text{elapsed\_minutes}(P)} + \text{CPU\%}(P) + \sum_{C \in \text{Subtree}_{d \le 5}(P)} \overline{\text{CPU\%}}(C)$$
+  $$H(P) = \frac{\text{children}(P)}{\text{elapsed minutes}(P)} + \text{CPU}(P) + \sum_{C \in \text{Subtree}_{d \le 5}(P)} \overline{\text{CPU}}(C)$$
 
-  1. **Child Spawning Rate ($\frac{\text{children}(P)}{\text{elapsed\_minutes}(P)}$):** Captures rapid process proliferation while normalizing by process lifetime (in minutes) so long-running legitimate applications (e.g., browsers) are not falsely penalized.
-  2. **Self CPU Utilization ($\text{CPU\%}(P)$):** Computed from user + kernel clock ticks (`utime + stime` in `/proc/<pid>/stat` divided by `sysconf(_SC_CLK_TCK)`).
+  1. **Child Spawning Rate ($\frac{\text{children}(P)}{\text{elapsed minutes}(P)}$):** Captures rapid process proliferation while normalizing by process lifetime (in minutes) so long-running legitimate applications (e.g., browsers) are not falsely penalized.
+  2. **Self CPU Utilization ($\text{CPU}(P)$):** Computed from user + kernel clock ticks (`utime + stime` in `/proc/<pid>/stat` divided by `sysconf(_SC_CLK_TCK)`).
   3. **Recursive Descendant CPU Utilization (`find_avg_cpu_of_child`, max depth $5$):** Counters sleeper-parent trojans by recursively aggregating the CPU usage of children and grandchildren up to $5$ generations deep.
 
 - **Testing with [`malware.c`](./malware.c):**
